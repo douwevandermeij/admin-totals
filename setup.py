@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 REQUIREMENTS = (
     'Django',
@@ -16,7 +16,7 @@ setup(
     """,
     long_description=open('README.md', 'rt').read(),
     url="",
-    packages=['admin_totals'],
+    packages=find_packages(),
     include_package_data=True,
     install_requires=REQUIREMENTS,
     tests_require=TEST_REQUIREMENTS,
