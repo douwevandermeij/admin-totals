@@ -6,7 +6,7 @@ Module to show totals in Django Admin List.
 
     virtualenv .
     source bin/activate
-    pip install https://github.com/douwevandermeij/admin-totals.git
+	pip install git+https://github.com/douwevandermeij/admin-totals.git
 
 ## Usagge
 
