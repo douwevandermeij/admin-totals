@@ -10,6 +10,12 @@ Module to show totals in Django Admin List.
 
 ## Usagge
 
+In settings.py
+
+	INSTALLED_APPS = [
+		'admin_totals',
+	]
+
 In admin.py:
 
     from admin_totals.admin import ModelAdminTotals

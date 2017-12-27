@@ -19,7 +19,7 @@ class ChangeListTotals(ChangeList):
 
 
 class ModelAdminTotals(admin.ModelAdmin):
-    change_list_template = 'admin_tools/change_list_totals.html'
+    change_list_template = 'admin_totals/change_list_totals.html'
 
     def get_changelist(self, request, **kwargs):
         return ChangeListTotals
