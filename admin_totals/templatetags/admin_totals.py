@@ -7,7 +7,7 @@ from django.template import Library
 register = Library()
 
 
-@register.inclusion_tag("admin_tools/change_list_results_totals.html")
+@register.inclusion_tag("admin_totals/change_list_results_totals.html")
 def result_list_totals(cl):
     """
     Displays the headers, totals bar and data list together
