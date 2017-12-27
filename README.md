@@ -6,15 +6,15 @@ Module to show totals in Django Admin List.
 
     virtualenv .
     source bin/activate
-	pip install git+https://github.com/douwevandermeij/admin-totals.git
+    pip install git+https://github.com/douwevandermeij/admin-totals.git
 
 ## Usagge
 
 In settings.py
 
-	INSTALLED_APPS = [
-		'admin_totals',
-	]
+    INSTALLED_APPS = [
+        'admin_totals',
+    ]
 
 In admin.py:
 
