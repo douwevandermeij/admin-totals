@@ -12,7 +12,7 @@ Module to show totals in Django Admin List.
 
 In admin.py:
 
-    from admin_tools.admin import ModelAdminTotals
+    from admin_totals.admin import ModelAdminTotals
     from django.contrib import admin
     from django.db.models import Sum, Avg
 
