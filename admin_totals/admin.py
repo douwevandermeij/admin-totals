@@ -13,7 +13,7 @@ class ChangeListTotals(ChangeList):
             list_totals = dict(self.model_admin.list_totals)
             for field in self.list_display:
                 if field in list_totals:
-                    self.aggregations.append(self.result_list.aggregate(agg=list_totals[field](field))['agg'] or '-')
+                    self.aggregations.append(self.result_list.aggregate(agg=list_totals[field](field))['agg'])
                 else:
                     self.aggregations.append('')
 
