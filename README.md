@@ -8,7 +8,7 @@ Module to show totals in Django Admin List.
     source bin/activate
     pip install git+https://github.com/douwevandermeij/admin-totals.git
 
-## Usagge
+## Usage
 
 In settings.py
 
