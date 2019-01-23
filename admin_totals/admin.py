@@ -1,5 +1,5 @@
 # coding=utf-8
-from __future__ import print_function, unicode_literals, division
+from __future__ import division, print_function, unicode_literals
 
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
@@ -13,7 +13,8 @@ class ChangeListTotals(ChangeList):
             list_totals = dict(self.model_admin.list_totals)
             for field in self.list_display:
                 if field in list_totals:
-                    self.aggregations.append(self.result_list.aggregate(agg=list_totals[field](field))['agg'])
+                    self.aggregations.append(
+                        self.result_list.aggregate(agg=list_totals[field](field))['agg'])
                 else:
                     self.aggregations.append('')
 
