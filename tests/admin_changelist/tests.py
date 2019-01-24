@@ -1,12 +1,12 @@
 import django
 from django.contrib.auth.models import User
-from django.db.models import Avg, Count
-from django.db.models.functions import Coalesce
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.test.client import RequestFactory
+from django.urls import reverse
+from django.utils.html import strip_spaces_between_tags
+from distutils.version import LooseVersion
 
-from admin_totals.admin import ModelAdminTotals
-
+from .admin import BandAdmin
 from .admin import site as custom_site
 from .models import Band
 
@@ -31,6 +31,7 @@ def get_changelist_args(modeladmin, **kwargs):
     return args
 
 
+@override_settings(ROOT_URLCONF="tests.admin_changelist.urls")
 class ChangeListTests(TestCase):
     factory = RequestFactory()
 
@@ -46,20 +47,15 @@ class ChangeListTests(TestCase):
         blondie.genres.create(name='Pop rock')
         blondie.genres.create(name='Punk rock')
 
+    def setUp(self):
+        self.client.force_login(self.superuser)
+
     def _mocked_authenticated_request(self, url, user):
         request = self.factory.get(url)
         request.user = user
         return request
 
     def _test_aggregations_django1(self):
-        class BandAdmin(ModelAdminTotals):
-            list_display = ['name', 'nr_of_members', 'genres']
-            list_totals = [
-                ('nr_of_members', Avg),
-                ('genres', lambda field: Coalesce(Count('genres'), 0))
-            ]
-            ordering = ('nr_of_members')
-
         band_admin = BandAdmin(Band, custom_site)
         request = self._mocked_authenticated_request('/band/', self.superuser)
         ChangeList = band_admin.get_changelist(request)
@@ -75,14 +71,6 @@ class ChangeListTests(TestCase):
         )
 
     def _test_aggregations_django2(self):
-        class BandAdmin(ModelAdminTotals):
-            list_display = ['name', 'nr_of_members', 'genres']
-            list_totals = [
-                ('nr_of_members', Avg),
-                ('genres', lambda field: Coalesce(Count('genres'), 0))
-            ]
-            ordering = ('nr_of_members')
-
         band_admin = BandAdmin(Band, custom_site)
         request = self._mocked_authenticated_request('/band/', self.superuser)
         cl = band_admin.get_changelist_instance(request)
@@ -98,7 +86,122 @@ class ChangeListTests(TestCase):
         )
 
     def test_aggregations(self):
-        if django.__version__.startswith('1'):
+        if LooseVersion(django.__version__) < LooseVersion('2'):
             self._test_aggregations_django1()
         else:
             self._test_aggregations_django2()
+
+    def _test_template_django1(self):
+        response = self.client.get(reverse('admin:admin_changelist_band_changelist'))
+        content_row1_html = '''
+            <tr class="row1">
+            <td class="action-checkbox">
+            <input type="checkbox" name="_selected_action" value="1" class="action-select" />
+            </td>
+            <th class="field-name">
+            <a href="/admin/admin_changelist/band/1/change/">Pink Floyd</a>
+            </th>
+            <td class="field-nr_of_members">5</td>
+            <td class="field-_genres">Progressive rock, Psychedelic rock</td>
+            </tr>
+        '''
+        content_row2_html = '''
+            <tr class="row2">
+            <td class="action-checkbox">
+            <input type="checkbox" name="_selected_action" value="2" class="action-select" />
+            </td>
+            <th class="field-name">
+            <a href="/admin/admin_changelist/band/2/change/">Blondie</a>
+            </th>
+            <td class="field-nr_of_members">6</td>
+            <td class="field-_genres">New wave, Pop rock, Punk rock</td>
+            </tr>
+        '''
+        totals_row_html = '''
+            <tr>
+            <th>
+              <b style="padding: 8px;"></b>
+            </th>
+            <th>
+              <b style="padding: 8px;"></b>
+            </th>
+            <th>
+              <b style="padding: 8px;">5.5</b>
+            </th>
+            <th>
+              <b style="padding: 8px;">5</b>
+            </th>
+            </tr>
+        '''
+        response_html = strip_spaces_between_tags(response.rendered_content)
+        for expected_element_html in [
+            content_row1_html,
+            content_row2_html,
+            totals_row_html
+        ]:
+            expected_element_html = strip_spaces_between_tags(expected_element_html).strip()
+            self.assertNotEqual(
+                response_html.find(expected_element_html),
+                -1,
+                'Failed to find expected row element: %s' % expected_element_html)
+
+    def _test_template_django2(self):
+        response = self.client.get(reverse('admin:admin_changelist_band_changelist'))
+        content_row1_html = '''
+            <tr class="row1">
+            <td class="action-checkbox">
+            <input type="checkbox" name="_selected_action" value="1" class="action-select">
+            </td>
+            <th class="field-name">
+            <a href="/admin/admin_changelist/band/1/change/">Pink Floyd</a>
+            </th>
+            <td class="field-nr_of_members">5</td>
+            <td class="field-_genres">Progressive rock, Psychedelic rock</td>
+            </tr>
+        '''
+        content_row2_html = '''
+            <tr class="row2">
+            <td class="action-checkbox">
+            <input type="checkbox" name="_selected_action" value="2" class="action-select">
+            </td>
+            <th class="field-name">
+            <a href="/admin/admin_changelist/band/2/change/">Blondie</a>
+            </th>
+            <td class="field-nr_of_members">6</td>
+            <td class="field-_genres">New wave, Pop rock, Punk rock</td>
+            </tr>
+        '''
+        totals_row_html = '''
+            <tr>
+            <th>
+              <b style="padding: 8px;"></b>
+            </th>
+            <th>
+              <b style="padding: 8px;"></b>
+            </th>
+            <th>
+              <b style="padding: 8px;">5.5</b>
+            </th>
+            <th>
+              <b style="padding: 8px;">5</b>
+            </th>
+            </tr>
+        '''
+        response_html = strip_spaces_between_tags(response.rendered_content)
+        for expected_element_html in [
+            content_row1_html,
+            content_row2_html,
+            totals_row_html
+        ]:
+            expected_element_html = strip_spaces_between_tags(expected_element_html).strip()
+            self.assertNotEqual(
+                response_html.find(expected_element_html),
+                -1,
+                'Failed to find expected row element: %s' % expected_element_html)
+
+    def test_template(self):
+        if LooseVersion(django.__version__) < LooseVersion('2.1'):
+            # Django 2.0 passes only with this test
+            self._test_template_django1()
+        else:
+            self._test_template_django2()
