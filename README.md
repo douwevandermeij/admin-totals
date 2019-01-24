@@ -36,3 +36,14 @@ Make sure to at least have the columns of `list_totals` in `list_display`.
 ## Tests
 
     python runtests.py
+
+
+## Contributing
+
+Please make sure to run the following commands before pushing and making a PR:
+
+    pip install -r requirements/test-ci.txt
+    isort --recursive admin_totals tests
+    flake8 tests admin_totals
+
+`isort` will sort the imports and `flake8` will lint the code. Please fix any errors before committing. Also, make sure to write passing tests.
