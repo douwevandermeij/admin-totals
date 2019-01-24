@@ -1,7 +1,9 @@
 # coding=utf-8
-from __future__ import print_function, unicode_literals, division
+from __future__ import division, print_function, unicode_literals
 
-from django.contrib.admin.templatetags.admin_list import result_headers, result_hidden_fields, results
+from django.contrib.admin.templatetags.admin_list import (result_headers,
+                                                          result_hidden_fields,
+                                                          results)
 from django.template import Library
 
 register = Library()
