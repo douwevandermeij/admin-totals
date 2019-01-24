@@ -1,10 +1,14 @@
+# coding=utf-8
+from __future__ import division, print_function, unicode_literals
+
+from distutils.version import LooseVersion
+
 import django
 from django.contrib.auth.models import User
 from django.test import TestCase, override_settings
 from django.test.client import RequestFactory
 from django.urls import reverse
 from django.utils.html import strip_spaces_between_tags
-from distutils.version import LooseVersion
 
 from .admin import BandAdmin
 from .admin import site as custom_site
