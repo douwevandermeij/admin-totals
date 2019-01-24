@@ -16,12 +16,13 @@ TEST_REQUIREMENTS = (
 
 setup(
     name="admin-totals",
-    version='1.0',
+    version='1.0.1',
     author="Douwe van der Meij",
     author_email="douwe@karibu-online.nl",
     description="""Django Admin Totals, add totals to your columns in Django admin.
     """,
     long_description=open('README.md', 'rt').read(),
+    long_description_content_type="text/markdown",
     url="https://github.com/douwevandermeij/admin-totals",
     packages=find_packages(),
     include_package_data=True,
