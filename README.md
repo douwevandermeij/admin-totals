@@ -2,6 +2,9 @@
 
 Module to show totals in Django Admin List.
 
+[![codecov](https://codecov.io/gh/douwevandermeij/admin-totals/branch/master/graph/badge.svg)](https://codecov.io/gh/douwevandermeij/admin-totals)
+[![Build Status](https://travis-ci.org/douwevandermeij/admin-totals.svg?branch=master)](https://travis-ci.org/douwevandermeij/admin-totals)
+
 ## Installation
 
     virtualenv .
@@ -29,3 +32,7 @@ In admin.py:
         list_totals = [('col_b', lambda field: Coalesce(Sum(field), 0))), ('col_c', Avg)]
 
 Make sure to at least have the columns of `list_totals` in `list_display`.
+
+## Tests
+
+    python runtests.py
